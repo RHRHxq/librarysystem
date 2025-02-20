@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.library.mapper.BooksMapper">
+    <update id="updateBooks" parameterType="object">
+        update books
+        <set>
+            <if test="bookName != null">
+                book_name = #{bookName},
+            </if>
+            <if test="author != null">
+                author = #{author},
+            </if>
+            <if test="isbn != null">
+                isbn = #{isbn},
+            </if>
+            <if test="price != null">
+                price = #{price},
+            </if>
+            <if test="description != null">
+                description = #{description},
+            </if>
+        </set>
+        where book_id = #{bookId}
+    </update>
+    <select id="pageQuery" resultType="com.library.entity.Books">
+        select * from books
+        <if test="sort != null and sort != ''">
+            order by
+                <choose>
+                    <when test="sort == 'bookId'">
+                        book_id
+                    </when>
+                    <when test="sort == 'bookName'">
+                        book_name
+                    </when>
+                    <when test="sort == 'author'">
+                        author
+                    </when>
+                    <when test="sort == 'isbn'">
+                        isbn
+                    </when>
+                    <when test="sort == 'publishDate'">
+                        publish_date
+                    </when>
+                </choose>
+            <if test="order != null and order != ''">
+                <choose>
+                    <when test="order == 'asc'">
+                        asc
+                    </when>
+                    <when test="order == 'desc'">
+                        desc
+                    </when>
+                </choose>
+            </if>
+        </if>
+    </select>
+    <select id="searchBooks" resultType="com.library.entity.Books">
+        select * from books
+        where 1 = 1
+        <if test="bookName != null and bookName != ''">
+            AND title like concat('%', #{bookName}, '%')
+        </if>
+        <if test="author != null and author != ''">
+            AND author like concat('%', #{author}, '%')
+        </if>
+        <if test="isbn != null and isbn != ''">
+            AND isbn = #{isbn}
+        </if>
+        <if test="publishDateStart != null">
+            AND publish_date >= #{publishDateStart}
+        </if>
+        <if test="publishDateEnd != null">
+            AND publish_date &lt;= #{publishDateEnd}
+        </if>
+        <if test="priceStart != null">
+            AND price >= #{priceStart}
+        </if>
+        <if test="priceEnd != null">
+            AND price &lt;= #{priceEnd}
+        </if>
+        <if test="categoryId != null">
+            AND book_id in (select book_id from book_categories where category_id = #{categoryId})
+        </if>
+    </select>
+
+    <select id="getBooksByCategoriesId" resultType="com.library.entity.Books">
+        select * from books where book_id in (select book_id from book_categories where category_id = #{categoryId})
+    </select>
+
+</mapper>
