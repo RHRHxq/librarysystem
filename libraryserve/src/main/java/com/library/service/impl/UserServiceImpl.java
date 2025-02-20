@@ -1,10 +1,7 @@
 package com.library.service.impl;
 
-import com.library.constant.MessageConstant;
-import com.library.constant.StatusConstant;
+import com.library.constant.MessageConstant;import com.library.constant.StatusConstant;
 import com.library.dto.*;
-import com.library.entity.Books;
-import com.library.exception.AccountLockedException;
 import com.library.exception.AccountNotFoundException;
 import com.library.exception.PasswordErrorException;
 import com.library.mapper.UserMapper;
@@ -28,8 +25,6 @@ public class UserServiceImpl implements UserService {
     /**
      * 员工登录
      *
-     * @param userLoginDTO
-     * @return
      */
     public User login(UserLoginDTO userLoginDTO) {
         String username = userLoginDTO.getUsername();
