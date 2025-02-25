@@ -3,6 +3,7 @@ package com.library.service;
 import com.library.dto.CategoriesDTO;
 import com.library.entity.Categories;
 import com.library.result.Result;
+import com.library.vo.CategoriesVO;
 
 import java.util.List;
 
@@ -17,14 +18,14 @@ public interface CategoriesService {
      * 获取所有分类
      * @return
      */
-    Result<List<CategoriesDTO>> getAllCategories();
+    Result<List<CategoriesVO>> getAllCategories();
 
     /**
      * 根据分类id获取分类
      * @param categoryId
      * @return
      */
-    Result<Categories> getCategoriesById(Long categoryId);
+    Result<CategoriesVO> getCategoriesById(Long categoryId);
 
     /**
      * 更新分类

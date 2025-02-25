@@ -2,6 +2,8 @@ package com.library.service;
 
 import com.library.dto.*;
 import com.library.entity.User;
+import com.library.vo.BooksVO;
+import com.library.vo.UserInformationVO;
 
 import java.util.List;
 
@@ -26,7 +28,7 @@ public interface UserService {
      * @param userid
      * @return
      */
-    List<BooksDTO> getFavorites(Long userid);
+    List<BooksVO> getFavorites(Long userid);
 
     /**
      * 删除收藏夹中的图书
@@ -52,7 +54,7 @@ public interface UserService {
      * @param id
      * @return
      */
-    UserInformationDTO getUserInformation(Long id);
+    UserInformationVO getUserInformation(Long id);
 
     /**
      * 关注他人

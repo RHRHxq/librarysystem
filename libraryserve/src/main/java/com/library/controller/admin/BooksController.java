@@ -1,6 +1,7 @@
 package com.library.controller.admin;
 
 import com.library.dto.*;
+import com.library.entity.BookBorrows;
 import com.library.entity.Books;
 import com.library.entity.Reviews;
 import com.library.entity.Tags;
@@ -8,11 +9,23 @@ import com.library.result.PageResult;
 import com.library.result.Result;
 import com.library.service.BooksService;
 import com.library.service.UserService;
+import com.library.vo.BookBorrowsVO;
+import com.library.vo.BooksVO;
+import com.library.vo.ReviewsVO;
+import com.library.vo.TagsVO;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.xmlbeans.impl.xb.xsdschema.Public;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/admin")
@@ -28,8 +41,16 @@ public class BooksController {
      * @return
      */
     @PostMapping("/books")
-    public Result<String> addBooks(@RequestBody BooksDTO booksDTO){
+    public Result<Object> addBooks(@Valid @RequestBody BooksDTO booksDTO, BindingResult bindingResult){
         log.info("新增书籍：{}", booksDTO);
+        if(bindingResult.hasErrors()){
+            List<String> errors =bindingResult.getFieldErrors()
+                    .stream()
+                    .map(error->error.getField()+":"+error.getDefaultMessage())
+                    .collect(Collectors.toList());
+            return Result.error(errors.toString());
+        }
+
         booksService.addBooks(booksDTO);
         return Result.success();
     }
@@ -41,10 +62,10 @@ public class BooksController {
      * @return 书籍列表
      */
     @GetMapping("/books")
-    public Result<List<Books>> getAllBooks(){
+    public Result<List<BooksVO>> getAllBooks(){
         log.info("获取全部书籍");
-        List<Books> books= booksService.getAllBooks();
-        return Result.success(books);
+        List<BooksVO> booksVO= booksService.getAllBooks();
+        return Result.success(booksVO);
     }
 
     /**
@@ -53,12 +74,10 @@ public class BooksController {
      * @return 单本书
      */
     @GetMapping("/books/{bookId}")
-    public Result<Books> getBooksById(@PathVariable("bookId") Long bookId){
-        BooksGetByIdDTO booksGetByIdDTO = new BooksGetByIdDTO();
-        booksGetByIdDTO.setBookId(bookId);
-        log.info("获取单本图书：{}", booksGetByIdDTO);
-        Books book = booksService.getBooksById(booksGetByIdDTO);
-        return Result.success(book);
+    public Result<BooksVO> getBooksById(@PathVariable("bookId") Long bookId){
+        log.info("获取单本图书：{}", bookId);
+        BooksVO booksVO = booksService.getBooksById(bookId);
+        return Result.success(booksVO);
     }
 
     /**
@@ -98,10 +117,10 @@ public class BooksController {
      * @param booksSearchDTO
      */
     @GetMapping("/books/searchbooks")
-    public Result<List<Books>> search(BooksSearchDTO booksSearchDTO){
+    public Result<List<BooksVO>> search(BooksSearchDTO booksSearchDTO){
         log.info("查询书籍和多条件过滤：{}", booksSearchDTO);
-        List<Books> books = booksService.searchBooks(booksSearchDTO);
-        return Result.success(books);
+        List<BooksVO> booksVO = booksService.searchBooks(booksSearchDTO);
+        return Result.success(booksVO);
     }
 
     /**
@@ -109,10 +128,10 @@ public class BooksController {
      * @param categoryId
      */
     @GetMapping("/books/getbooksbycategoriesid/{categoryId}")
-    public Result<List<Books>> getBooksByCategoriesId(@PathVariable("categoryId") Long categoryId){
+    public Result<List<BooksVO>> getBooksByCategoriesId(@PathVariable("categoryId") Long categoryId){
         log.info("根据分类id获取该分类下的书籍：{}", categoryId);
-        List<Books> books = booksService.getBooksByCategoriesId(categoryId);
-        return Result.success(books);
+        List<BooksVO> booksVO = booksService.getBooksByCategoriesId(categoryId);
+        return Result.success(booksVO);
     }
 
 
@@ -132,10 +151,10 @@ public class BooksController {
      * @param bookId
      */
     @GetMapping("/books/reviews/{bookId}")
-    public Result<List<Reviews>> getReviews(@PathVariable("bookId") Long bookId){
+    public Result<List<ReviewsVO>> getReviews(@PathVariable("bookId") Long bookId){
         log.info("获取书籍评论：{}", bookId);
-        List<Reviews> reviews = booksService.getReviews(bookId);
-        return Result.success(reviews);
+        List<ReviewsVO> reviewsVO = booksService.getReviews(bookId);
+        return Result.success(reviewsVO);
     }
 
     /**
@@ -176,10 +195,10 @@ public class BooksController {
      * @param bookId
      */
     @GetMapping("/books/gettags/{bookId}")
-    public Result<List<Tags>> getTags(@PathVariable("bookId") Long bookId){
+    public Result<List<TagsVO>> getTags(@PathVariable("bookId") Long bookId){
         log.info("获取图书的标签列表：{}", bookId);
-        List<Tags> tags = booksService.getTags(bookId);
-        return Result.success(tags);
+        List<TagsVO> tagsVO = booksService.getTags(bookId);
+        return Result.success(tagsVO);
     }
 
     /**
@@ -187,10 +206,10 @@ public class BooksController {
      * @param tagId
      */
     @GetMapping("/books/getbookbytagid/{tagId}")
-    public Result<List<Books>> getBooksByTagId(@PathVariable("tagId") Long tagId){
+    public Result<List<BooksVO>> getBooksByTagId(@PathVariable("tagId") Long tagId){
         log.info("获取标签的图书列表：{}", tagId);
-        List<Books> books = booksService.getBooksByTagId(tagId);
-        return Result.success(books);
+        List<BooksVO> booksVO = booksService.getBooksByTagId(tagId);
+        return Result.success(booksVO);
     }
 
     /**
@@ -204,6 +223,39 @@ public class BooksController {
         return Result.success();
     }
 
+    /**
+     * 借阅图书
+     * @param booksBorrowDTO
+     */
+    @PostMapping("/books/borrow")
+    public Result<String> borrowBooks(@RequestBody BooksBorrowDTO booksBorrowDTO){
+        log.info("借阅图书：{}", booksBorrowDTO);
+        booksService.borrowBooks(booksBorrowDTO);
+        return Result.success();
+    }
+
+    /**
+     * 归还图书
+     * @param booksBorrowDTO
+     */
+    @PutMapping("/books/return")
+    public Result<String> returnBooks(@RequestBody BooksBorrowDTO booksBorrowDTO){
+        log.info("归还图书：{}", booksBorrowDTO);
+        booksService.returnBooks(booksBorrowDTO);
+        return Result.success();
+    }
+
+    /**
+     * 获取借阅记录
+     * @param userId
+     */
+    @GetMapping("/books/getborrowrecord/{userId}")
+    public Result<List<BookBorrowsVO>> getBorrowRecord(@PathVariable("userId") Long userId){
+        log.info("获取借阅记录：{}", userId);
+        List<BookBorrowsVO> bookBorrowsVO = booksService.getBorrowRecord(userId);
+        return Result.success(bookBorrowsVO);
+
+    }
 
 
 }

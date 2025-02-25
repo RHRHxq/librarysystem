@@ -5,6 +5,10 @@ import com.library.entity.Books;
 import com.library.entity.Reviews;
 import com.library.entity.Tags;
 import com.library.result.PageResult;
+import com.library.vo.BookBorrowsVO;
+import com.library.vo.BooksVO;
+import com.library.vo.ReviewsVO;
+import com.library.vo.TagsVO;
 
 import java.util.List;
 
@@ -19,14 +23,14 @@ public interface BooksService {
      * 获取所有书籍
      * @return 书籍列表
      */
-    List<Books> getAllBooks();
+    List<BooksVO> getAllBooks();
 
     /**
      * 根据书籍id获取书籍
      * @param booksGetByIdDTO
      * @return 书籍
      */
-    Books getBooksById(BooksGetByIdDTO booksGetByIdDTO);
+    BooksVO getBooksById(Long bookId);
 
     /**
      * 更新书籍
@@ -52,14 +56,14 @@ public interface BooksService {
      * @param booksSearchDTO
      * @return
      */
-    List<Books> searchBooks(BooksSearchDTO booksSearchDTO);
+    List<BooksVO> searchBooks(BooksSearchDTO booksSearchDTO);
 
     /**
      * 根据分类id获取书籍列表
      * @param categoryId
      * @return
      */
-    List<Books> getBooksByCategoriesId(Long categoryId);
+    List<BooksVO> getBooksByCategoriesId(Long categoryId);
 
     /**
      * 添加书籍评论
@@ -72,7 +76,7 @@ public interface BooksService {
      * @param bookId
      * @return
      */
-    List<Reviews> getReviews(Long bookId);
+    List<ReviewsVO> getReviews(Long bookId);
 
     /**
      * 根据评论id删除评论
@@ -96,17 +100,35 @@ public interface BooksService {
      * 获取图书的标签列表
      * @param bookId
      */
-    List<Tags> getTags(Long bookId);
+    List<TagsVO> getTags(Long bookId);
 
     /**
      * 获取标签的图书列表
      * @param tagId
      */
-    List<Books> getBooksByTagId(Long tagId);
+    List<BooksVO> getBooksByTagId(Long tagId);
 
     /**
      * 从图书中删除标签
      * @param booksTagDTO
      */
     void deleteTag(BooksTagDTO booksTagDTO);
+
+    /**
+     * 借阅图书
+     * @param booksBorrowDTO
+     */
+    void borrowBooks(BooksBorrowDTO booksBorrowDTO);
+
+    /**
+     * 归还图书
+     * @param booksBorrowDTO
+     */
+    void returnBooks(BooksBorrowDTO booksBorrowDTO);
+
+    /**
+     * 获取借阅记录
+     * @param userId
+     */
+    List<BookBorrowsVO> getBorrowRecord(Long userId);
 }

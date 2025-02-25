@@ -4,18 +4,25 @@ import com.library.constant.JwtClaimsConstant;
 import com.library.dto.*;
 import com.library.dto.UserInformationDTO;
 import com.library.entity.User;
+import com.library.mapper.UserMapper;
 import com.library.properties.JwtProperties;
 import com.library.result.Result;
 import com.library.service.UserService;
+import com.library.utils.AliOssUtil;
 import com.library.utils.JwtUtil;
+import com.library.vo.BooksVO;
+import com.library.vo.UserInformationVO;
 import com.library.vo.UserLoginVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * 员工管理
@@ -29,6 +36,8 @@ public class UserController {
     private UserService userService;
     @Autowired
     private JwtProperties jwtProperties;
+    @Autowired
+    private AliOssUtil aliOssUtil;
 
     /**
      * 注册
@@ -98,10 +107,10 @@ public class UserController {
      * 获取收藏夹
      */
     @GetMapping("/{userid}/favorites")
-    public Result<List<BooksDTO>> getFavorites(@PathVariable Long userid) {
+    public Result<List<BooksVO>> getFavorites(@PathVariable Long userid) {
         log.info("获取收藏夹：{}", userid);
-        List<BooksDTO> booksDTOList = userService.getFavorites(userid);
-        return Result.success(booksDTOList);
+        List<BooksVO> booksVO = userService.getFavorites(userid);
+        return Result.success(booksVO);
     }
 
     /**
@@ -130,13 +139,10 @@ public class UserController {
      * @param id
      */
     @GetMapping("/userInformation/{id}")
-    public Result<UserInformationDTO> getUserInformation(@PathVariable Long id) {
+    public Result<UserInformationVO> getUserInformation(@PathVariable Long id) {
         log.info("获取别人的个人资料：{}", id);
-        UserInformationDTO userInformation = userService.getUserInformation(id);
-        userInformation.setAvatarPath("hidden");
-        userInformation.setEmail("hidden");
-        userInformation.setPhone("hidden");
-        return Result.success(userInformation);
+        UserInformationVO userInformationVO = userService.getUserInformation(id);
+        return Result.success(userInformationVO);
     }
 
     /**
@@ -171,5 +177,30 @@ public class UserController {
         List<Long> userFollowsDTOList = userService.getFollowed(id);
         return Result.success(userFollowsDTOList);
     }
+
+    /**
+     * 头像上传回显
+     */
+    @PostMapping("/avatar/{id}")
+    public Result<String> avatar(@PathVariable Long id,@RequestParam("file") MultipartFile file) {
+        log.info("头像上传回显：{}", file);
+        try {
+            //原始文件名
+           String originalFilename = file.getOriginalFilename();
+           //截取后缀
+            String extension = originalFilename.substring(originalFilename.lastIndexOf("."));
+            //构造新文件名称
+            String objectName = UUID.randomUUID().toString() + extension;
+
+            String filePath = aliOssUtil.upload(file.getBytes(), objectName,id);
+
+
+            return Result.success(filePath);
+        } catch (IOException e) {
+            log.error("头像上传失败:{}",e);
+        }
+        return Result.error("头像上传失败");
+    }
+
 
 }

@@ -5,6 +5,7 @@ import com.library.entity.Categories;
 import com.library.mapper.CategoriesMapper;
 import com.library.result.Result;
 import com.library.service.CategoriesService;
+import com.library.vo.CategoriesVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -30,9 +31,9 @@ public class CategoriesServicelmpl implements CategoriesService {
      * 获取所有分类
      * @return
      */
-    public Result<List<CategoriesDTO>> getAllCategories() {
-        List<CategoriesDTO> categories = categoriesMapper.selectAll();
-        return Result.success(categories);
+    public Result<List<CategoriesVO>> getAllCategories() {
+
+        return Result.success(categoriesMapper.selectAll());
     }
 
     /**
@@ -40,9 +41,9 @@ public class CategoriesServicelmpl implements CategoriesService {
      * @param categoryId
      * @return
      */
-    public Result<Categories> getCategoriesById(Long categoryId) {
-        Categories categories = categoriesMapper.selectById(categoryId);
-        return Result.success(categories);
+    public Result<CategoriesVO> getCategoriesById(Long categoryId) {
+
+        return Result.success(categoriesMapper.selectById(categoryId));
     }
 
     /**

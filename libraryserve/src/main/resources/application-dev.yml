@@ -6,3 +6,9 @@ library:
     database: library
     username: root
     password: 1234
+  alioss:
+    endpoint: oss-cn-hangzhou.aliyuncs.com
+    access-key-id: LTAI5tPNXMDr1SAX3JZHRGCW
+    access-key-secret: v03pSbPMKR1uvoNL7qqCyBAbhZlss7
+    bucket-name: librarysystem-wx
+

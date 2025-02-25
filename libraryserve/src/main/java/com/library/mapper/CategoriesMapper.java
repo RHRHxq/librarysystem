@@ -2,6 +2,7 @@ package com.library.mapper;
 
 import com.library.dto.CategoriesDTO;
 import com.library.entity.Categories;
+import com.library.vo.CategoriesVO;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
@@ -27,7 +28,7 @@ public interface CategoriesMapper {
      * @return
      */
     @Select("select * from categories")
-    List<CategoriesDTO> selectAll();
+    List<CategoriesVO> selectAll();
 
     /**
      * 根据分类id获取分类
@@ -35,7 +36,7 @@ public interface CategoriesMapper {
      * @return
      */
     @Select("select * from categories where category_id = #{categoryId}")
-    Categories selectById(Long categoryId);
+    CategoriesVO selectById(Long categoryId);
 
     /**
      * 更新分类

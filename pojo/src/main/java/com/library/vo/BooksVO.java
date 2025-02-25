@@ -1,13 +1,10 @@
-package com.library.dto;
+package com.library.vo;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -15,20 +12,14 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class BooksDTO {
+public class BooksVO {
     private Long bookId;
-
-    @NotNull(message = "书名不能为空")
     private String bookName;
-
-    @NotNull(message = "作者不能为空")
     private String author;
     private String isbn;
-
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate publishDate;
-
-    @Pattern(regexp = "^[0-9]+[.0-9]", message = "价格只能是数字")
     private Double price;
     private String description;
+    private LocalDateTime createTime;
+    private LocalDateTime updateTime;
 }

@@ -4,6 +4,7 @@ import com.library.dto.CategoriesDTO;
 import com.library.entity.Categories;
 import com.library.result.Result;
 import com.library.service.CategoriesService;
+import com.library.vo.CategoriesVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -31,7 +32,7 @@ public class CategoriesController {
      * 获取所有分类
      */
     @GetMapping("/categories")
-    public Result <List<CategoriesDTO>> getAllCategories() {
+    public Result <List<CategoriesVO>> getAllCategories() {
         log.info("获取所有分类");
         return categoriesService.getAllCategories();
     }
@@ -41,7 +42,7 @@ public class CategoriesController {
      * @param categoryId
      */
     @GetMapping("/categories/{categoryId}")
-    public Result <Categories> getCategoriesById(@PathVariable("categoryId") Long categoryId) {
+    public Result <CategoriesVO> getCategoriesById(@PathVariable("categoryId") Long categoryId) {
         log.info("获取指定id的分类：{}", categoryId);
         return categoriesService.getCategoriesById(categoryId);
     }

@@ -19,4 +19,5 @@ public class User implements Serializable {
     private LocalDateTime createTime;
     private LocalDateTime lastLoginTime;
     private String avatarPath;
+    private String salt;
 }

@@ -5,6 +5,8 @@ import com.library.dto.BooksFavoritesDTO;
 import com.library.dto.UserFollowsDTO;
 import com.library.dto.UserInformationDTO;
 import com.library.entity.User;
+import com.library.vo.BooksVO;
+import com.library.vo.UserInformationVO;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;
@@ -29,7 +31,7 @@ public interface UserMapper {
      * @return
      */
     @Select("select * from books where book_id in (select book_id from book_favorites where user_id = #{userid})")
-    List<BooksDTO> getFavorites(Long userid);
+    List<BooksVO> getFavorites(Long userid);
 
     /**
      * 根据用户id和书籍id删除收藏的书籍
@@ -50,7 +52,7 @@ public interface UserMapper {
      * 注册
      * @param user
      */
-    @Insert("insert into user(username,password,create_time) values (#{username},#{password},#{createTime})")
+    @Insert("insert into user(username,password,create_time,salt) values (#{username},#{password},#{createTime},#{salt})")
     void register(User user);
 
     /**
@@ -60,7 +62,7 @@ public interface UserMapper {
      * @return
      */
     @Select("select id,avatar_path,name,gender,birthday,bio,interests from user where id = #{id}")
-    UserInformationDTO getUserInformation(Long id);
+    UserInformationVO getUserInformation(Long id);
 
     /**
      * 关注他人

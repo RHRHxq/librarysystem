@@ -1,4 +1,4 @@
-package com.library.entity;
+package com.library.vo;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,13 +9,14 @@ import java.time.LocalDateTime;
 
 @Data
 @Builder
-@NoArgsConstructor
 @AllArgsConstructor
-public class BookBorrows {
-    private Long borrowId;
+@NoArgsConstructor
+public class ReviewsVO {
+    private Long reviewId;
     private Long userId;
     private Long bookId;
-    private LocalDateTime borrowTime;
-    private LocalDateTime returnTime;
-    private Boolean available;
+    private String content;
+    private Long rating;
+    private Long parentReviewId;
+    private LocalDateTime createTime;
 }

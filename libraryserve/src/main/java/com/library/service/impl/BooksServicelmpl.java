@@ -3,12 +3,17 @@ package com.library.service.impl;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.library.dto.*;
+import com.library.entity.BookBorrows;
 import com.library.entity.Books;
 import com.library.entity.Reviews;
 import com.library.entity.Tags;
 import com.library.mapper.BooksMapper;
 import com.library.result.PageResult;
 import com.library.service.BooksService;
+import com.library.vo.BookBorrowsVO;
+import com.library.vo.BooksVO;
+import com.library.vo.ReviewsVO;
+import com.library.vo.TagsVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,17 +54,17 @@ public class BooksServicelmpl implements BooksService {
      *
      * @return 书籍列表
      */
-    public List<Books> getAllBooks() {
+    public List<BooksVO> getAllBooks() {
         return booksMapper.selectAll();
     }
 
     /**
      * 根据id查询书籍
-     * @param booksGetByIdDTO
+     * @param bookId
      * @return 单本书
      */
-    public Books getBooksById(BooksGetByIdDTO booksGetByIdDTO) {
-        return booksMapper.selectById(booksGetByIdDTO.getBookId());
+    public BooksVO getBooksById(Long bookId) {
+        return booksMapper.selectById(bookId);
     }
 
     /**
@@ -97,7 +102,7 @@ public class BooksServicelmpl implements BooksService {
      * 查询书籍和多条件过滤
      * @param booksSearchDTO
      */
-    public List<Books> searchBooks(BooksSearchDTO booksSearchDTO) {
+    public List<BooksVO> searchBooks(BooksSearchDTO booksSearchDTO) {
         return booksMapper.searchBooks(booksSearchDTO);
     }
 
@@ -106,7 +111,7 @@ public class BooksServicelmpl implements BooksService {
      * @param categoryId
      * @return
      */
-    public List<Books> getBooksByCategoriesId(Long categoryId) {
+    public List<BooksVO> getBooksByCategoriesId(Long categoryId) {
         return booksMapper.getBooksByCategoriesId(categoryId);
     }
 
@@ -126,7 +131,7 @@ public class BooksServicelmpl implements BooksService {
      * @param bookId
      * @return
      */
-    public List<Reviews> getReviews(Long bookId) {
+    public List<ReviewsVO> getReviews(Long bookId) {
         return booksMapper.getReviews(bookId);
     }
 
@@ -159,7 +164,7 @@ public class BooksServicelmpl implements BooksService {
      * 获取图书的标签列表
      * @param bookId
      */
-    public List<Tags> getTags(Long bookId) {
+    public List<TagsVO> getTags(Long bookId) {
         return booksMapper.getTags(bookId);
     }
 
@@ -167,7 +172,7 @@ public class BooksServicelmpl implements BooksService {
      * 获取标签的图书列表
      * @param tagId
      */
-    public List<Books> getBooksByTagId(Long tagId) {
+    public List<BooksVO> getBooksByTagId(Long tagId) {
         return booksMapper.getBooksByTagId(tagId);
     }
 
@@ -177,5 +182,38 @@ public class BooksServicelmpl implements BooksService {
      */
     public void deleteTag(BooksTagDTO booksTagDTO) {
         booksMapper.deleteTag(booksTagDTO);
+    }
+
+    /**
+     * 借阅图书
+     * @param booksBorrowDTO
+     */
+    public void borrowBooks(BooksBorrowDTO booksBorrowDTO) {
+        BookBorrows booksBorrows=new BookBorrows();
+        BeanUtils.copyProperties(booksBorrowDTO,booksBorrows);
+        booksBorrows.setBorrowTime(LocalDateTime.now());
+        booksBorrows.setAvailable(false);
+        booksMapper.borrowBooks(booksBorrows);
+    }
+
+    /**
+     * 归还图书
+     * @param booksBorrowDTO
+     */
+    public void returnBooks(BooksBorrowDTO booksBorrowDTO) {
+        BookBorrows booksBorrows=new BookBorrows();
+        BeanUtils.copyProperties(booksBorrowDTO,booksBorrows);
+        booksBorrows.setReturnTime(LocalDateTime.now());
+        booksBorrows.setAvailable(true);
+        booksMapper.returnBooks(booksBorrows);
+    }
+
+    /**
+     * 获取借阅记录
+     * @param userId
+     */
+    public List<BookBorrowsVO> getBorrowRecord(Long userId) {
+
+        return booksMapper.getBorrowRecord(userId);
     }
 }

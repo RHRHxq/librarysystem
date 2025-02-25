@@ -55,7 +55,7 @@
             </if>
         </if>
     </select>
-    <select id="searchBooks" resultType="com.library.entity.Books">
+    <select id="searchBooks" resultType="com.library.vo.BooksVO">
         select * from books
         where 1 = 1
         <if test="bookName != null and bookName != ''">
@@ -84,7 +84,7 @@
         </if>
     </select>
 
-    <select id="getBooksByCategoriesId" resultType="com.library.entity.Books">
+    <select id="getBooksByCategoriesId" resultType="com.library.vo.BooksVO">
         select * from books where book_id in (select book_id from book_categories where category_id = #{categoryId})
     </select>
 
