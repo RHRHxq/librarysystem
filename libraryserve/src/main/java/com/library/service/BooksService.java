@@ -27,7 +27,7 @@ public interface BooksService {
 
     /**
      * 根据书籍id获取书籍
-     * @param booksGetByIdDTO
+     * @param bookId
      * @return 书籍
      */
     BooksVO getBooksById(Long bookId);

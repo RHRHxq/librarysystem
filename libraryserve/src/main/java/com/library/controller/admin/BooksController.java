@@ -1,5 +1,6 @@
 package com.library.controller.admin;
 
+
 import com.library.dto.*;
 import com.library.entity.BookBorrows;
 import com.library.entity.Books;
@@ -20,7 +21,9 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -41,17 +44,33 @@ public class BooksController {
      * @return
      */
     @PostMapping("/books")
-    public Result<Object> addBooks(@Valid @RequestBody BooksDTO booksDTO, BindingResult bindingResult){
+    public Result<Object> addBooks(@RequestBody BooksDTO booksDTO,HttpServletResponse response ){
         log.info("新增书籍：{}", booksDTO);
-        if(bindingResult.hasErrors()){
-            List<String> errors =bindingResult.getFieldErrors()
-                    .stream()
-                    .map(error->error.getField()+":"+error.getDefaultMessage())
-                    .collect(Collectors.toList());
-            return Result.error(errors.toString());
+        if(booksDTO.getBookName() == null){
+            response.setStatus(400);
+            return Result.error("书籍名不能为空");
+        }
+        if(booksDTO.getAuthor() == null){
+            response.setStatus(400);
+            return Result.error("作者不能为空");
+        }
+        String priceRegex="^[0-9]";
+        if(!booksDTO.getPrice().toString().matches(priceRegex)){
+            response.setStatus(400);
+            return Result.error("价格格式不正确");
+        }
+        String isbnRegex="^[0-9]";
+        if(!booksDTO.getIsbn().matches(isbnRegex)){
+            response.setStatus(400);
+            return Result.error("isbn格式不正确");
+        }
+        try{
+            booksService.addBooks(booksDTO);
+        }catch (Exception e){
+            response.setStatus(400);
+            return Result.error("书籍已存在");
         }
 
-        booksService.addBooks(booksDTO);
         return Result.success();
     }
 
@@ -74,9 +93,13 @@ public class BooksController {
      * @return 单本书
      */
     @GetMapping("/books/{bookId}")
-    public Result<BooksVO> getBooksById(@PathVariable("bookId") Long bookId){
+    public Result<BooksVO> getBooksById(@PathVariable("bookId") Long bookId, HttpServletResponse response){
         log.info("获取单本图书：{}", bookId);
         BooksVO booksVO = booksService.getBooksById(bookId);
+        if(booksVO == null){
+            response.setStatus(404);
+            return Result.error("书籍不存在");
+        }
         return Result.success(booksVO);
     }
 

@@ -7,9 +7,13 @@ import com.library.service.CategoriesService;
 import com.library.vo.CategoriesVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/admin")
@@ -23,9 +27,11 @@ public class CategoriesController {
      * @param categoriesDTO
      */
     @RequestMapping("/categories")
-    public void addCategories(@RequestBody CategoriesDTO categoriesDTO) {
+    public Result<String> addCategories(@Valid @RequestBody CategoriesDTO categoriesDTO) {
+
         log.info("添加分类：{}", categoriesDTO);
         categoriesService.addCategories(categoriesDTO);
+        return Result.success();
     }
 
     /**

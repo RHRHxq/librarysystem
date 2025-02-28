@@ -64,7 +64,8 @@ public class BooksServicelmpl implements BooksService {
      * @return 单本书
      */
     public BooksVO getBooksById(Long bookId) {
-        return booksMapper.selectById(bookId);
+        BooksVO booksVO = booksMapper.selectById(bookId);
+        return booksVO;
     }
 
     /**
