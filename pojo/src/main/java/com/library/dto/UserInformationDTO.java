@@ -5,13 +5,14 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserInformationDTO {
+public class UserInformationDTO implements Serializable {
     private Long id;
     private String avatarPath;
     private String email;

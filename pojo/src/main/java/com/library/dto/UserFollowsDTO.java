@@ -5,11 +5,13 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
+
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserFollowsDTO {
+public class UserFollowsDTO implements Serializable {
     private Long followerId;
     private Long followedId;
 }

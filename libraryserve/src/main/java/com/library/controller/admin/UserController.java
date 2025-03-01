@@ -4,7 +4,6 @@ import com.library.constant.JwtClaimsConstant;
 import com.library.dto.*;
 import com.library.dto.UserInformationDTO;
 import com.library.entity.User;
-import com.library.mapper.UserMapper;
 import com.library.properties.JwtProperties;
 import com.library.result.Result;
 import com.library.service.UserService;
@@ -64,7 +63,7 @@ public class UserController {
 
         //登录成功后，生成jwt令牌
         Map<String, Object> claims = new HashMap<>();
-        claims.put(JwtClaimsConstant.EMP_ID, user.getId());
+        claims.put(JwtClaimsConstant.ADMIN_ID, user.getId());
         String token = JwtUtil.createJWT(
                 jwtProperties.getAdminSecretKey(),
                 jwtProperties.getAdminTtl(),

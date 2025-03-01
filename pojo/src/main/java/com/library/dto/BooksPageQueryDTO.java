@@ -5,11 +5,13 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
+
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class BooksPageQueryDTO {
+public class BooksPageQueryDTO implements Serializable {
     private int page;
     private int pageSize;
     private String sort;
