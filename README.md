@@ -4,7 +4,7 @@
 
 ## 项目概述
 
-本项目是一个名为 `librarysystem` 的图书馆系统，主要用于管理图书馆相关业务。项目采用模块化的架构设计，包含多个子模块，便于开发和维护。
+本项目是一个名为 `librarysystem` 的图书馆系统，主要用于管理图书馆相关业务。
 
 ## 项目架构
 
@@ -46,16 +46,13 @@
 - **Lombok**：版本为 1.18.30，用于减少 Java 代码中的样板代码，如 getter、setter 方法等，提高开发效率。
 - **Fastjson**：版本为 1.2.76，是一个高性能的 JSON 处理库，用于处理 JSON 数据的序列化和反序列化。
 - **PageHelper**：版本为 1.3.0，是一个 MyBatis 的分页插件，用于实现数据库查询的分页功能。
-- **Knife4j**：版本为 3.0.2，是一个基于 Swagger 的增强 UI 工具，用于生成和展示项目的 API 接口文档。
-- **Spring Boot Data Redis**：用于集成 Redis 缓存，提高系统的性能和响应速度。
-- **Spring Boot Starter Cache**：提供了缓存支持，方便开发者使用缓存来提高系统性能。
 - **Spring Boot Starter WebSocket**：用于实现 WebSocket 通信，实现实时交互功能。
 - **JWT（JSON Web Token）**：版本为 0.9.1，用于实现用户身份认证和授权。
 - **Aliyun SDK OSS**：版本为 3.10.2，用于与阿里云对象存储服务（OSS）进行交互，实现文件的上传和下载等功能。
 
 ## API 接口介绍
 
-项目的 API 接口主要通过 `WebMvcConfiguration` 类进行配置和管理，以下是一些主要的接口信息，[API接口文档](./图书管理系统后端.md)：
+以下是一些主要的接口信息，[API接口文档](./图书管理系统后端.md)：
 
 ### 图书管理系统
 
